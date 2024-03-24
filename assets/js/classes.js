@@ -91,13 +91,20 @@ class Stage {
     }
 
     doAttack(attacking, attacked) {
-        if(attacking.life <= 0 || attacked.life <= 0) {
-            this.log.addMessage(`Um dos players está morto.`);
+        if(attacking.life <= 0) {
+            this.log.addMessage(`☠️ Este jogador já está morto.`);
             return;
         }
 
-        let attackFactor = (Math.random() * 2).toFixed(2);
+        if (attacked.life <= 0) {
+            this.log.addMessage(`⚰️ e 🕯️ preta!`);
+            return;
+        }
+
+        let attackFactor = (Math.random() * 2).toFixed(2); 
+        //ataque aleatório máximo pode duplicar o dano
         let defenseFactor = (Math.random() * 2).toFixed(2);
+        //defesa aleatório máximo pode duplicar a defesa
         
 
         let actualAttack = attacking.attack * attackFactor;
@@ -105,13 +112,13 @@ class Stage {
 
         if(actualAttack > actualDefense) {
             attacked.life -= actualAttack;
-            this.log.addMessage(`${attacking.name} causou ${actualAttack.toFixed(2)} de dano em ${attacked.name}`)
+            this.log.addMessage(`⚔️${attacking.name} causou ${actualAttack.toFixed(2)} de dano em ${attacked.name}`)
         } else {
-            this.log.addMessage(`${attacked.name} conseguiu defender.`)
+            this.log.addMessage(`🛡️${attacked.name} conseguiu defender.`)
         }
         
 
-        this.update();
+        this.update(); //atualiza o ambiente (vida, etc)
 
     }
 }
@@ -124,15 +131,15 @@ class Log {
     }
 
     addMessage(msg) {
-        this.list.push(msg);
-        this.render();
+        this.list.push(msg); //add msg no array
+        this.render(); //renderiza o log toda vez que tiver algo novo, tira tudo e atualiza.
 
     }
 
     render() {
-        this.listEl.innerHTML = '';
+        this.listEl.innerHTML = ''; //limpa a lista antiga
 
-        for(let i in this.list) {
+        for(let i in this.list) {  //percorre a lista e preenche os LIs
             this.listEl.innerHTML += `<li>${this.list[i]}</li>`;
         }
     }
